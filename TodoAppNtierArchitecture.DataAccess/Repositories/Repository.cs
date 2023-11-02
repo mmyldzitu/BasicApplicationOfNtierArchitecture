@@ -35,7 +35,7 @@ namespace TodoAppNtierArchitecture.DataAccess.Repositories
                 await _todoContext.Set<T>().AsNoTracking().SingleOrDefaultAsync(filter);
         }
 
-        public async Task<T> GetById(object id)
+        public async Task<T> Find(object id)
         {
             return await _todoContext.Set<T>().FindAsync(id);
         }
@@ -45,16 +45,16 @@ namespace TodoAppNtierArchitecture.DataAccess.Repositories
             return _todoContext.Set<T>().AsQueryable();
         }
 
-        public  void Remove(object id)
+        public  void Remove(T entity)
         {
-            var silinecek=_todoContext.Set<T>().Find(id);
-            _todoContext.Remove(silinecek);
+            
+            _todoContext.Remove(entity);
         }
 
-        public  void Update(T entity)
+        public  void Update(T entity, T unchanged)
         {
-            var guncellenecekVeri = _todoContext.Set<T>().Find(entity.Id);
-            _todoContext.Entry(guncellenecekVeri).CurrentValues.SetValues(entity);
+            
+            _todoContext.Entry(unchanged).CurrentValues.SetValues(entity);
         }
     }
 }

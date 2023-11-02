@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TodoAppNtierArchitecture.Common\TodoAppNtierArchitecture.Common.csproj" />
     <ProjectReference Include="..\TodoAppNtierArchitecture.DataAccess\TodoAppNtierArchitecture.DataAccess.csproj" />
     <ProjectReference Include="..\TodoAppNtierArchitecture.Dtos\TodoAppNtierArchitecture.Dtos.csproj" />
   </ItemGroup>

@@ -22,8 +22,8 @@ namespace TodoAppNtierArchitecture.UI.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var workList = await _workService.GetAll();
-            return View(workList);
+            var response = await _workService.GetAll();
+            return View(response.Data);
         }
         [HttpGet]
         public IActionResult Create()
@@ -41,8 +41,8 @@ namespace TodoAppNtierArchitecture.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> Update(int id)
         {
-            var dto = await _workService.GetById<WorkUpdateDto>(id);
-            return View(dto);
+            var response = await _workService.GetById<WorkUpdateDto>(id);
+            return View(response.Data);
         }
         [HttpPost]
         public async Task<IActionResult> Update(WorkUpdateDto dto)
