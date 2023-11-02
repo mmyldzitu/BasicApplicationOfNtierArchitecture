@@ -4,4 +4,9 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TodoAppNtierArchitecture.DataAccess\TodoAppNtierArchitecture.DataAccess.csproj" />
+    <ProjectReference Include="..\TodoAppNtierArchitecture.Dtos\TodoAppNtierArchitecture.Dtos.csproj" />
+  </ItemGroup>
+
 </Project>
