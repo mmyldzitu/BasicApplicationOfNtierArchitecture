@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TodoAppNtierArchitecture.Dtos.Interfaces;
 
 namespace TodoAppNtierArchitecture.Dtos.WorkDtos
 {
-   public  class WorkUpdateDto
+   public  class WorkUpdateDto:IDto
     {
         public int Id { get; set; }
         public string Definition { get; set; }

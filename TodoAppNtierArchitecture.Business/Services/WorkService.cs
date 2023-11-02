@@ -1,62 +1,56 @@
-﻿using System;
+﻿using AutoMapper;
+using FluentValidation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TodoAppNtierArchitecture.Business.Interfaces;
+using TodoAppNtierArchitecture.Business.ValidationRules;
 using TodoAppNtierArchitecture.DataAccess.UnitOfWork;
+using TodoAppNtierArchitecture.Dtos.Interfaces;
 using TodoAppNtierArchitecture.Dtos.WorkDtos;
 using TodoAppNtierArchitecture.Entities.Concrete;
 
 namespace TodoAppNtierArchitecture.Business.Services
 {
+
     public class WorkService : IWorkService
     {
+        private readonly IMapper _mapper;
         private readonly IUow _uow;
+        private readonly IValidator<WorkUpdateDto> _updateDtoValidator;
+        private readonly IValidator<WorkCreateDto> _createDtoValidator;
 
-        public WorkService(IUow uow)
+        public WorkService(IUow uow, IMapper mapper, IValidator<WorkUpdateDto> updateDtoValidator, IValidator<WorkCreateDto> createDtoValidator)
         {
             _uow = uow;
+            _mapper = mapper;
+            _updateDtoValidator = updateDtoValidator;
+            _createDtoValidator = createDtoValidator;
         }
 
         public async Task Create(WorkCreateDto dto)
         {
-           await _uow.GetRepository<Work>().Create(new()
+            var validationResult = _createDtoValidator.Validate(dto);
+            if (validationResult.IsValid)
             {
-                Definition = dto.Definition,
-                isCompleted = dto.isCompleted
-            });
-            await _uow.SaveChanges();
+                await _uow.GetRepository<Work>().Create(_mapper.Map<Work>(dto));
+                await _uow.SaveChanges();
+            }
+           
         }
 
         public async  Task<List<WorkListDto>> GetAll()
         {
-            var list=await _uow.GetRepository<Work>().GetAll();
-            var workList = new List<WorkListDto>();
-            if (list !=null && list.Count > 0)
-            {
-                foreach(var work in list)
-                {
-                    workList.Add(new()
-                    {
-                        Definition = work.Definition,
-                        Id = work.Id,
-                        isCompleted = work.isCompleted
-                    });
-                }
-            }
-            return workList;
+
+            return _mapper.Map<List<WorkListDto>>(await _uow.GetRepository<Work>().GetAll());
         }
 
-        public async Task<WorkListDto> GetById(int id)
+        public async Task<IDto> GetById<IDto>(int id)
         {
-            var data = await _uow.GetRepository<Work>().GetByFilter(x => x.Id == id);
-            return new()
-            {
-                
-                Definition = data.Definition,
-                isCompleted = data.isCompleted
-            };
+            return _mapper.Map<IDto>(await _uow.GetRepository<Work>().GetByFilter(x => x.Id == id));
+           
         }
 
         public async Task Remove(int id)
@@ -67,14 +61,13 @@ namespace TodoAppNtierArchitecture.Business.Services
 
         public async  Task Update(WorkUpdateDto dto)
         {
-            
-             _uow.GetRepository<Work>().Update(new()
+            var validationResult = _updateDtoValidator.Validate(dto);
+            if (validationResult.IsValid)
             {
-                Definition = dto.Definition,
-                Id = dto.Id,
-                isCompleted = dto.isCompleted
-            });
-             await _uow.SaveChanges();
+                _uow.GetRepository<Work>().Update(_mapper.Map<Work>(dto));
+                await _uow.SaveChanges();
+            }
+             
         }
     }
 }
