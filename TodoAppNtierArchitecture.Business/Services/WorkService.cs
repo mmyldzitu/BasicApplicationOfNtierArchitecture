@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TodoAppNtierArchitecture.Business.Extensions;
 using TodoAppNtierArchitecture.Business.Interfaces;
 using TodoAppNtierArchitecture.Business.ValidationRules;
 using TodoAppNtierArchitecture.Common.ResponseObjects;
@@ -41,16 +42,8 @@ namespace TodoAppNtierArchitecture.Business.Services
                 return new Response<WorkCreateDto>(ResponseType.Success, dto);
             }
             else
-            { List<CustomValidationError> errors = new();
-                foreach(var error in validationResult.Errors)
-                {
-                    errors.Add(new()
-                    {
-                        ErrorMessage=error.ErrorMessage,
-                        PropertyName=error.PropertyName
-                    });
-                }
-                return new Response<WorkCreateDto>(ResponseType.ValidationError, dto, errors);
+            { 
+                return new Response<WorkCreateDto>(ResponseType.ValidationError, dto, validationResult.ConvertToCustomValidationError());
             }
         }
 
@@ -101,16 +94,8 @@ namespace TodoAppNtierArchitecture.Business.Services
             }
             else
             {
-                List<CustomValidationError> errors = new();
-                foreach (var error in validationResult.Errors)
-                {
-                    errors.Add(new()
-                    {
-                        ErrorMessage = error.ErrorMessage,
-                        PropertyName = error.PropertyName
-                    });
-                }
-                return new Response<WorkUpdateDto>(ResponseType.ValidationError, dto, errors);
+               
+                return new Response<WorkUpdateDto>(ResponseType.ValidationError, dto, validationResult.ConvertToCustomValidationError());
             }
              
         }

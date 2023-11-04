@@ -17,4 +17,5 @@ namespace TodoAppNtierArchitecture.Business.Interfaces
         Task<IResponse> Remove(int id);
         Task<IResponse<WorkUpdateDto>> Update(WorkUpdateDto dto);
     }
+    
 }
